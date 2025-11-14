@@ -1,11 +1,13 @@
 const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
 const sendButton = document.getElementById('send-button');
+const newChatButton = document.getElementById('new-chat-button');
 
 // It should be an array of objects, where each object has a "role" and "parts" key.
 // For example: let history = [];
 let history = [];
 
+newChatButton.addEventListener('click', newChat);
 sendButton.addEventListener('click', sendMessage);
 userInput.addEventListener('keydown', (event) => {
     if (event.key === 'Enter' && !event.shiftKey) {
@@ -13,6 +15,13 @@ userInput.addEventListener('keydown', (event) => {
         sendMessage();
     }
 });
+
+async function newChat() {
+    history = [];
+    chatBox.innerHTML = '';
+    userInput.value = '';
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
 
 async function sendMessage() {
     const message = userInput.value.trim();
