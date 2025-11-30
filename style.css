@@ -35,7 +35,7 @@ body {
     padding: 10px;
 }
 
-#new-chat-button {
+#new-chat-button, #summarize-button {
     margin-left: 10px;
     border-radius: 5px;
     border: none;
@@ -45,7 +45,7 @@ body {
     cursor: pointer;
 }
 
-#new-chat-button:hover {
+#new-chat-button:hover, #summarize-button:hover {
     background-color: #0056b3;
 }
 #user-input {

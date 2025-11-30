@@ -54,5 +54,12 @@ def chat():
         print(f"Error: {e}")
         return jsonify({'response': f'Sorry, I encountered an error: {e}'}), 500    
 
+@app.route('/summarize', methods=['POST'])
+def summarize():
+    history = request.json.get('history', [])
+    prompt = "summarize the following conversation: " + str(history)
+    response = text_model.generate_content(prompt)
+    return jsonify({'response': response.text})
+
 if __name__ == '__main__':
     app.run(debug=True)

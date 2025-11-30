@@ -2,6 +2,7 @@ const chatBox = document.getElementById('chat-box');
 const userInput = document.getElementById('user-input');
 const sendButton = document.getElementById('send-button');
 const newChatButton = document.getElementById('new-chat-button');
+const summarizeButton = document.getElementById('summarize-button');
 
 // It should be an array of objects, where each object has a "role" and "parts" key.
 // For example: let history = [];
@@ -15,11 +16,26 @@ userInput.addEventListener('keydown', (event) => {
         sendMessage();
     }
 });
+summarizeButton.addEventListener('click', summarize);
 
 async function newChat() {
     history = [];
     chatBox.innerHTML = '';
     userInput.value = '';
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+async function summarize() {
+    const response = await fetch('/summarize', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ history: history })
+    });
+    const data = await response.json();
+    chatBox.innerHTML = '';
+    chatBox.appendChild(document.createTextNode('Summary: ' + data.response));
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
@@ -78,8 +94,8 @@ async function sendMessage() {
                     botResponseContainer.textContent = 'Bot: ' + botResponse;
                     chatBox.scrollTop = chatBox.scrollHeight;
                 }
-
-                botResponseContainer.textContent = 'Bot: ';
+                botResponseContainer.innerHTML = '';
+                botResponseContainer.appendChild(document.createTextNode('Bot: '))
                 const parts = botResponse.split('```');
                 for (let i = 0; i < parts.length; i++) {
                     const part = parts[i];
@@ -89,11 +105,11 @@ async function sendMessage() {
                         const preElement = document.createElement('pre');
                         const codeElement = document.createElement('code');
                         codeElement.textContent = part;
+                        hljs.highlightElement(codeElement);
                         preElement.appendChild(codeElement);
                         botResponseContainer.appendChild(preElement);
                     }
                 }
-                hljs.highlightAll();
                 history.push ({ role: 'model', parts: [botResponse] });
             }
 
